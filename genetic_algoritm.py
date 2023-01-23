@@ -15,16 +15,17 @@ class PlayArea:
     def generate_obstacle(self, num_of_obstacle = 5):
         #Generate obstacle
         self.obstacle = []
-        for i in range(num_of_obstacle):
+        #Generate mid point of the obstacle
+        mid_point = rand.randint(0, [self.len_X, self.len_Y], (num_of_obstacle, 2))
+        
+        for mid in mid_point:
             #Generate random number [0.5, 1] for length from mid point to 4 corners
             point_deviation = rand.randint(1, 2)
-            #Generate mid point of the obstacle
-            mid_point = rand.randint(0, self.len_X), rand.randint(0, self.len_Y)
             #Generate 4 corner of the obstacle
-            top_left = Point(mid_point[0]-point_deviation, mid_point[1]-point_deviation)
-            top_right = Point(mid_point[0]+point_deviation, mid_point[1]-point_deviation)
-            bottom_left = Point(mid_point[0]-point_deviation, mid_point[1]+point_deviation)
-            bottom_right = Point(mid_point[0]+point_deviation, mid_point[1]+point_deviation)
+            top_left = Point(mid[0]-point_deviation, mid[1]-point_deviation)
+            top_right = Point(mid[0]+point_deviation, mid[1]-point_deviation)
+            bottom_left = Point(mid[0]-point_deviation, mid[1]+point_deviation)
+            bottom_right = Point(mid[0]+point_deviation, mid[1]+point_deviation)
             #Generate obstacle with the 4 corner
             obs = Polygon([top_left, top_right, bottom_right, bottom_left])
             self.obstacle.append(obs)
@@ -236,6 +237,7 @@ class Genetic_Algoritm:
         self.mutate_point = mutate_point #How many gen to mutate
         self.mutation_rate = mutation_rate #Mutation probability
         self.mutation_step = mutation_step #How far from current value a gen will mutate
+        self.history = []
 
     def generate_population(self, start_point, fire_point, pArea, chrom_len):
         #Make robot by max population
@@ -338,7 +340,7 @@ class Genetic_Algoritm:
 
             print('Best Fitness Generation {0} : {1}'.format(i, self.elitism(1)[0].fitness))
 
-            #fitness_hist.append(self.elitism(1)[0].fitness)
+            self.history.append(self.elitism(1)[0].fitness)
         
         best_indv = self.elitism(1)
 
